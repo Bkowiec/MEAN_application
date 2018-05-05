@@ -1,0 +1,23 @@
+{
+  "name": "mean_application",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bkowiec/MEAN_application.git"
+  },
+  "author": "Bartosz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bkowiec/MEAN_application/issues"
+  },
+  "homepage": "https://github.com/Bkowiec/MEAN_application#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.0.17"
+  }
+}
