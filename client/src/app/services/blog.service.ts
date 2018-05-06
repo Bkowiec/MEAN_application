@@ -68,15 +68,15 @@ export class BlogService {
   }
 
   
-  // postComment(id, comment) {
-  //   this.createAuthenticationHeaders(); 
+  postComment(id, comment) {
+    this.createAuthenticationHeaders(); 
     
-  //   const blogData = {
-  //     id: id,
-  //     comment: comment
-  //   }
-  //   return this.http.post(this.domain + 'blogs/comment', blogData, this.options).map(res => res.json());
+    const blogData = {
+      id: id,
+      comment: comment
+    }
+    return this.http.post(this.domain + '/blogs/comment', blogData, this.options).map(res => res.json());
 
-  // }
+  }
 
 }

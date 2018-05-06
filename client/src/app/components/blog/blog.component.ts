@@ -28,9 +28,10 @@ export class BlogComponent implements OnInit {
     private blogService: BlogService
   ) {
     this.createNewBlogForm(); 
-    this.getAllBlogs();
+    this.createCommentForm(); 
   }
 
+  
   createNewBlogForm() {
     this.form = this.formBuilder.group({
       
@@ -49,6 +50,28 @@ export class BlogComponent implements OnInit {
     })
   }
 
+  
+  createCommentForm() {
+    this.commentForm = this.formBuilder.group({
+      comment: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(200)
+      ])]
+    })
+  }
+
+  
+  enableCommentForm() {
+    this.commentForm.get('comment').enable(); 
+  }
+
+  
+  disableCommentForm() {
+    this.commentForm.get('comment').disable(); 
+  }
+
+  
   enableFormNewBlogForm() {
     this.form.get('title').enable(); 
     this.form.get('body').enable(); 
@@ -60,8 +83,10 @@ export class BlogComponent implements OnInit {
     this.form.get('body').disable(); 
   }
 
+  
   alphaNumericValidation(controls) {
     const regExp = new RegExp(/^[a-zA-Z0-9 ]+$/); 
+    
     if (regExp.test(controls.value)) {
       return null; 
     } else {
@@ -69,10 +94,37 @@ export class BlogComponent implements OnInit {
     }
   }
 
+  
   newBlogForm() {
     this.newPost = true; 
   }
 
+  
+  reloadBlogs() {
+    this.loadingBlogs = true; 
+    this.getAllBlogs(); 
+    setTimeout(() => {
+      this.loadingBlogs = false; 
+    }, 4000);
+  }
+
+  
+  draftComment(id) {
+    this.commentForm.reset(); 
+    this.newComment = []; 
+    this.newComment.push(id); 
+  }
+
+  
+  cancelSubmission(id) {
+    const index = this.newComment.indexOf(id); 
+    this.newComment.splice(index, 1); 
+    this.commentForm.reset(); 
+    this.enableCommentForm(); 
+    this.processing = false; 
+  }
+
+  
   onBlogSubmit() {
     this.processing = true; 
     this.disableFormNewBlogForm(); 
@@ -107,47 +159,71 @@ export class BlogComponent implements OnInit {
       }
     });
   }
-  
-  reloadBlogs() {
-    this.loadingBlogs = true; 
-    this.getAllBlogs();
-    setTimeout(() => {
-      this.loadingBlogs = false; 
-    }, 4000);
-  }
 
+  
   goBack() {
     window.location.reload(); 
   }
 
+  
   getAllBlogs() {
+    
     this.blogService.getAllBlogs().subscribe(data => {
-      this.blogPosts = data.blogs; // Assign array to use in HTML
+      this.blogPosts = data.blogs; 
     });
   }
 
-  draftComment(id) {
-    this.commentForm.reset(); 
-    this.newComment = []; 
-    this.newComment.push(id); 
-  }
-
+  
   likeBlog(id) {
+    
     this.blogService.likeBlog(id).subscribe(data => {
-      this.getAllBlogs();
+      this.getAllBlogs(); 
     });
   }
 
+  
   dislikeBlog(id) {
+    
     this.blogService.dislikeBlog(id).subscribe(data => {
       this.getAllBlogs(); 
     });
   }
 
+  
+  postComment(id) {
+    this.disableCommentForm(); 
+    this.processing = true; 
+    const comment = this.commentForm.get('comment').value; 
+    
+    this.blogService.postComment(id, comment).subscribe(data => {
+      this.getAllBlogs(); 
+      const index = this.newComment.indexOf(id); 
+      this.newComment.splice(index, 1); 
+      this.enableCommentForm(); 
+      this.commentForm.reset(); 
+      this.processing = false; 
+      if (this.enabledComments.indexOf(id) < 0) this.expand(id); 
+    });
+  }
+
+  
+  expand(id) {
+    this.enabledComments.push(id); 
+  }
+
+  
+  collapse(id) {
+    const index = this.enabledComments.indexOf(id); 
+    this.enabledComments.splice(index, 1); 
+  }
+
   ngOnInit() {
+    
     this.authService.getProfile().subscribe(profile => {
       this.username = profile.user.username; 
     });
-    this.getAllBlogs();
+
+    this.getAllBlogs(); 
   }
+
 }
