@@ -8,19 +8,19 @@ module.exports = (router) => {
         // req.body.password;
         if (!req.body.email) {
             res.json({
-                succes: false,
+                success: false,
                 message: 'You must provide an e-mail'
             });
         } else {
             if (!req.body.username) {
                 res.json({
-                    succes: false,
+                    success: false,
                     message: 'You must provide an username'
                 });
             } else {
                 if (!req.body.password) {
                     res.json({
-                        succes: false,
+                        success: false,
                         message: 'You must provide an password'
                     });
                 } else {
@@ -33,31 +33,31 @@ module.exports = (router) => {
                         if (err) {
                             if (err.code === 11000) {
                                 res.json({
-                                    succes: false,
+                                    success: false,
                                     message: 'Username or e-mail already exists'
                                 });
                             } else {
                                 if (err.errors) {
                                     if (err.errors.email) {
                                         res.json({
-                                            succes: false,
+                                            success: false,
                                             message: err.errors.email.message
                                         });
                                     } else {
                                         if (err.errors.username) {
                                             res.json({
-                                                succes: false,
+                                                success: false,
                                                 message: err.errors.username.message
                                             });
                                         } else {
                                             if (err.errors.password) {
                                                 res.json({
-                                                    succes: false,
+                                                    success: false,
                                                     message: err.errors.password.message
                                                 });
                                             } else {
                                                 res.json({
-                                                    succes: false,
+                                                    success: false,
                                                     message: err
                                                 });
                                             }
@@ -65,20 +65,84 @@ module.exports = (router) => {
                                     }
                                 } else {
                                     res.json({
-                                        succes: false,
+                                        success: false,
                                         message: 'Could not save user. Error: ', err
                                     });
                                 }
                             }
                         } else {
                             res.json({
-                                succes: true,
+                                success: true,
                                 message: 'Acount registered!' 
                             });
                         }
                     });
                 }
             }
+        }
+    });
+
+    router.get('/checkEmail/:email', (req, res) => {
+        if (!req.params.email) {
+            res.json({
+                success: false,
+                message: 'E-mail was not provided' 
+            });
+        } else {
+            User.findOne({
+                email: req.params.email
+            }, (err, user) => {
+                if (err) {
+                    res.json({
+                        success: false,
+                        message: err 
+                    });
+                } else {
+                    if (user) {
+                        res.json({
+                            success: false,
+                            message: 'E-mail already taken' 
+                        });
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'E-mail is available' 
+                        });
+                    }
+                }
+            })
+        }
+    });
+
+    router.get('/checkUsername/:username', (req, res) => {
+        if (!req.params.username) {
+            res.json({
+                success: false,
+                message: 'Username was not provided' 
+            });
+        } else {
+            User.findOne({
+                username: req.params.username
+            }, (err, user) => {
+                if (err) {
+                    res.json({
+                        success: false,
+                        message: err 
+                    });
+                } else {
+                    if (user) {
+                        res.json({
+                            success: false,
+                            message: 'Username already taken' 
+                        });
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'Username is available' 
+                        });
+                    }
+                }
+            })
         }
     });
 
