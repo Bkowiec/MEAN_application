@@ -28,7 +28,7 @@ export class BlogComponent implements OnInit {
     private blogService: BlogService
   ) {
     this.createNewBlogForm(); 
-    
+    this.getAllBlogs();
   }
 
   createNewBlogForm() {
@@ -95,7 +95,7 @@ export class BlogComponent implements OnInit {
       } else {
         this.messageClass = 'alert alert-success'; 
         this.message = data.message; 
-        // this.getAllBlogs();
+        this.getAllBlogs();
         
         setTimeout(() => {
           this.newPost = false; 
@@ -110,7 +110,7 @@ export class BlogComponent implements OnInit {
   
   reloadBlogs() {
     this.loadingBlogs = true; 
-    
+    this.getAllBlogs();
     setTimeout(() => {
       this.loadingBlogs = false; 
     }, 4000);
@@ -120,16 +120,34 @@ export class BlogComponent implements OnInit {
     window.location.reload(); 
   }
 
+  getAllBlogs() {
+    this.blogService.getAllBlogs().subscribe(data => {
+      this.blogPosts = data.blogs; // Assign array to use in HTML
+    });
+  }
+
   draftComment(id) {
     this.commentForm.reset(); 
     this.newComment = []; 
     this.newComment.push(id); 
   }
 
+  likeBlog(id) {
+    this.blogService.likeBlog(id).subscribe(data => {
+      this.getAllBlogs();
+    });
+  }
+
+  dislikeBlog(id) {
+    this.blogService.dislikeBlog(id).subscribe(data => {
+      this.getAllBlogs(); 
+    });
+  }
+
   ngOnInit() {
     this.authService.getProfile().subscribe(profile => {
       this.username = profile.user.username; 
     });
+    this.getAllBlogs();
   }
-
 }
