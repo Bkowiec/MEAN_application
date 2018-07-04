@@ -115,6 +115,11 @@ const userSchema = new Schema({
         type: String,
         required: true,
         validate: passwordValidators
+    },
+    //TODO search for wat hot validate Buffer data
+    avatar: {
+        type: Buffer,
+        required: false
     }
 
 });

@@ -21,7 +21,12 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "google": "^2.1.0",
     "jsonwebtoken": "^8.2.1",
-    "mongoose": "^5.0.17"
+    "mongoose": "^5.0.17",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
   }
 }
