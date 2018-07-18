@@ -1,1 +1,28 @@
-<button (click)="postIt()">Dawaj Halina</button>
+<div style="text-align: center">
+  <h1>Import:
+    <span>{{importplus}}/{{toimport}}</span>
+    <br>
+    <span style="color:#ff6b6b">{{importprocent}}</span>
+    <span style="color:#ff6b6b">%</span>
+  </h1>
+  <progress class="skill-1" max="100" value=""></progress><br><br>
+  <button (click)="postIt()">PRZEPIERDALAJ!</button>
+  <div>
+    <div style="width: 50%;
+    float: left;">
+      <h2>Niezaimportowani:</h2>
+      <ul style="    max-height: 300px;
+    overflow-y: scroll;
+    background: whitesmoke;color:red;list-style: none;" class="errorItem"></ul>
+    </div>
+
+    <div style="    width: 50%;
+    float: right;">
+      <h2>Zaimportowani:</h2>
+      <ul style="    max-height: 300px;
+    overflow-y: scroll;
+    background: whitesmoke;color:green;list-style: none;" class="successItem"></ul>
+    </div>
+  </div>
+
+</div>
