@@ -11,48 +11,53 @@ import { NotAuthGuard } from './guards/notAuth.guard';
 import { EditBlogComponent } from './components/blog/edit-blog/edit-blog.component';
 import { DeleteBlogComponent } from './components/blog/delete-blog/delete-blog.component';
 import { PublicProfileComponent } from './components/public-profile/public-profile.component';
+import {GameComponent} from "./components/game/game.component";
 
 const appRoutes: Routes = [
-    { 
+    {
         path: '',
         component: HomeComponent
     },
-    { 
+    {
         path: 'dashboard',
         component: DashboardComponent,
         canActivate: [AuthGuard]
     },
-    { 
+    {
         path: 'register',
         component: RegisterComponent,
         canActivate: [NotAuthGuard]
     },
-    { 
+    {
         path: 'login',
         component: LoginComponent,
         canActivate: [NotAuthGuard]
     },
-    { 
+    {
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard]
     },
-    { 
+    {
         path: 'blog',
         component: BlogComponent,
         canActivate: [AuthGuard]
     },
-    { 
+    {
         path: 'edit-blog/:id',
         component: EditBlogComponent,
         canActivate: [AuthGuard]
     },
-    { 
+    {
+      path: 'game',
+      component: GameComponent
+    },
+    {
         path: 'delete-blog/:id',
         component: DeleteBlogComponent,
         canActivate: [AuthGuard]
     },
-    { 
+    {
         path: 'user/:username',
         component: PublicProfileComponent,
         canActivate: [AuthGuard]
