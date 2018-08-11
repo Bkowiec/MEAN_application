@@ -11,6 +11,8 @@ export abstract class AbstractCar {
 
   public abstract getX(): number;
 
+  public abstract getY(): number;
+
   public abstract create(): void;
 
   public abstract stop(): void;

@@ -72,6 +72,10 @@ export class HulkCar extends AbstractCar {
     return this.car.GetPosition().x;
   }
 
+  getY(): number {
+    return this.car.GetPosition().y;
+  }
+
   moveBackward(): void {
     this.spring1.SetMotorSpeed(-this.settings.speed);
   }
