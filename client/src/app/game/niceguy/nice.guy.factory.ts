@@ -2,6 +2,7 @@ import {INiceGuyFactory} from "./inice.guy.factory";
 import {NiceGuy} from "./nice.guy";
 import * as box2d from "../Box2D/Box2D";
 import {NiceGuySize} from "./nice.guy.size";
+import {BodyType} from "./body.type";
 
 export class NiceGuyFactory implements INiceGuyFactory {
   private static niceGuyCounter: number = 1;
@@ -119,11 +120,11 @@ export class NiceGuyFactory implements INiceGuyFactory {
     niceGuy.rightArmJoint = NiceGuyFactory.createJoint(this.world, niceGuy.rightArm, niceGuy.torso, lowerArmAngle, upperArmAngle, rightArmJointPosition);
 
     const impulseMultiply = 4;
-    niceGuy.setBodyBreakable(niceGuy.head, niceGuy.headJoint, impulseMultiply * size * 15.0);
-    niceGuy.setBodyBreakable(niceGuy.leftArm, niceGuy.leftArmJoint, impulseMultiply * size * 10.0);
-    niceGuy.setBodyBreakable(niceGuy.rightArm, niceGuy.rightArmJoint, impulseMultiply * size * 10.0);
-    niceGuy.setBodyBreakable(niceGuy.leftLeg, niceGuy.leftLegJoint, impulseMultiply * size * 12.0);
-    niceGuy.setBodyBreakable(niceGuy.rightLeg, niceGuy.rightLegJoint, impulseMultiply * size * 12.0);
+    niceGuy.setBodyBreakable(niceGuy.head, niceGuy.headJoint, impulseMultiply * size * 15.0, BodyType.HEAD);
+    niceGuy.setBodyBreakable(niceGuy.leftArm, niceGuy.leftArmJoint, impulseMultiply * size * 10.0, BodyType.ARM);
+    niceGuy.setBodyBreakable(niceGuy.rightArm, niceGuy.rightArmJoint, impulseMultiply * size * 10.0, BodyType.ARM);
+    niceGuy.setBodyBreakable(niceGuy.leftLeg, niceGuy.leftLegJoint, impulseMultiply * size * 12.0, BodyType.LEG);
+    niceGuy.setBodyBreakable(niceGuy.rightLeg, niceGuy.rightLegJoint, impulseMultiply * size * 12.0, BodyType.LEG);
   }
 
 }

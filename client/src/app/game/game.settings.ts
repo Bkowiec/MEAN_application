@@ -3,7 +3,8 @@ import * as box2d from "./Box2D/Box2D";
 export class GameSettings {
   public hz: number = 60;
   public velocityIterations: number = 8;
-  public positionIterations: number = 3;
+  public positionIterations: number = 1;
+  public animationFramesPerGameInfo = 240;
   public particleIterations: number = box2d.b2CalculateParticleIterations(10, 0.04, 1 / this.hz);
   public drawShapes: boolean = true;
   public drawParticles: boolean = true;
