@@ -2,9 +2,14 @@ import * as box2d from "../Box2D/Box2D";
 
 export class GroundCreator {
   private ground: box2d.b2Body;
+  private mapEndX: number = 0;
 
   constructor(private world: box2d.b2World) {
 
+  }
+
+  public getMapEndX(): number {
+    return this.mapEndX;
   }
 
   public create() {
@@ -150,7 +155,7 @@ export class GroundCreator {
     const pos = this.createRamp(new box2d.b2Vec2(430, 5));
     // pos.x = 0;
     this.createTeeter(pos);
-
+    this.mapEndX = pos.x + 35;
   }
 
   private createMountain() {
@@ -236,7 +241,6 @@ export class GroundCreator {
   }
 
   private createTeeter(startPos: box2d.b2Vec2) {
-    console.log(startPos);
     const bd: box2d.b2BodyDef = new box2d.b2BodyDef();
     bd.position.Set(startPos.x, 1.0);
     bd.type = box2d.b2BodyType.b2_dynamicBody;
@@ -252,7 +256,6 @@ export class GroundCreator {
     jd.upperAngle = 16.0 * box2d.b2_pi / 180.0;
     jd.enableLimit = true;
     this.world.CreateJoint(jd);
-
 
     body.SetAngle(-10.0);
   }

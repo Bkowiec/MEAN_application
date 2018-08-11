@@ -15,7 +15,7 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
   private isPostSolveExecuted;
   private score: number = 0;
   private gameInfo: GameStepInfo;
-  private startTime: number;
+  private endTime: number;
   private readonly world: box2d.b2World;
   private groundCreator: GroundCreator;
   private car: AbstractCar;
@@ -37,7 +37,7 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
     this.groundCreator.create();
     this.car.create();
     this.createBunchOfNiceGuys();
-    this.startTime = new Date().getTime() + this.gameTimeMillis;
+    this.endTime = new Date().getTime() + this.gameTimeMillis;
   }
 
   public PostSolve(contact: box2d.b2Contact, impulse: box2d.b2ContactImpulse) {
@@ -65,7 +65,7 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
   }
 
   getTimeLeft(): number {
-    return this.startTime - new Date().getTime();
+    return this.endTime - new Date().getTime();
   }
 
   step(timeStep: number, velocityIterations: number, positionIterations: number, particleIterations: number) {
@@ -102,7 +102,16 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
   }
 
   isGameFinished() {
-    //todo: add game end
+    if (this.getTimeLeft() <= 0) {
+      return true;
+    }
+    if (this.car.getY() <= -5) {
+      return true;
+    }
+    if (this.car.getX() >= this.groundCreator.getMapEndX()) {
+      this.score += this.calculateEndingScorePoints();
+      return true;
+    }
     return false;
   }
 
@@ -161,5 +170,11 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
       stepScore += scoreMultiply * attackedNiceGuy.impulse;
     });
     return Math.round(stepScore);
+  }
+
+  private calculateEndingScorePoints(): number {
+    let endScore = 5000;
+    endScore += Math.round(this.getTimeLeft() / 10);
+    return endScore;
   }
 }
