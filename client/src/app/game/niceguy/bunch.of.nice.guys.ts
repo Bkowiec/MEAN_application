@@ -24,10 +24,10 @@ export class BunchOfNiceGuys {
       const brokenBody: { impulse: number, bodyType: BodyType } = niceGuy.destroyJointWhenBodyHitOverMaxImpulse(contact, impulse);
       const isNiceGuyDown = niceGuy.isDown();
       if (brokenBody !== null) {
-        console.log(brokenBody);
+        // console.log(brokenBody);
         attackedNiceGuys.push({id: niceGuy.id, isDead: niceGuy.isDead(), impulse: brokenBody.impulse, bodyType: brokenBody.bodyType});
       } else if (isNiceGuyDown) {
-        console.log('nice guy fallen down');
+        // console.log('nice guy fallen down');
         attackedNiceGuys.push({id: niceGuy.id, isDead: true, impulse: 0, bodyType: BodyType.HEAD});
       }
     });

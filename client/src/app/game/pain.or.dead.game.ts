@@ -49,7 +49,7 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
     if (attackedNiceGuys.length === 0) {
       return;
     }
-    console.log('num of attacked nice guys: ' + attackedNiceGuys.length);
+    // console.log('num of attacked nice guys: ' + attackedNiceGuys.length);
     this.score += this.calculateGameScore(attackedNiceGuys);
     const deadNiceGuyIndex = attackedNiceGuys.findIndex(attackedNiceGuy => attackedNiceGuy.isDead);
     this.gameInfo = {isPain: true, isDead: deadNiceGuyIndex !== -1};
@@ -154,7 +154,7 @@ export class PainOrDeadGame extends box2d.b2ContactListener {
     let stepScore = 0;
     attackedNiceGuys.forEach(attackedNiceGuy => {
       if (attackedNiceGuy.isDead) {
-        console.log('is dead, id: ', attackedNiceGuy.id);
+        // console.log('is dead, id: ', attackedNiceGuy.id);
         stepScore += 1000;
       }
       let scoreMultiply = 0;
