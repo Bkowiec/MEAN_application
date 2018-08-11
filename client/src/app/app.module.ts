@@ -27,6 +27,7 @@ import {GameComponent} from "./components/game/game.component";
 import {Camera} from "./game/camera";
 import {ShapeDrawer} from "./game/shape.drawer";
 import {GameMenuComponent} from "./components/game/game-menu/game.menu.component";
+import {GameEndComponent} from "./components/game/game-end/game.end.component";
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import {GameMenuComponent} from "./components/game/game-menu/game.menu.component
     DeleteBlogComponent,
     PublicProfileComponent,
     GameComponent,
-    GameMenuComponent
+    GameMenuComponent,
+    GameEndComponent
   ],
   imports: [
     BrowserModule,

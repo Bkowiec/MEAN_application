@@ -14,6 +14,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public score: number = 0;
   public timeLeft: string;
   public gameStarted = false;
+  public gameEnded = false;
   public isPain: boolean = false;
   public isDead: boolean = false;
   public showStartInfo: boolean = true;
@@ -85,10 +86,6 @@ export class GameComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  onClickDiv() {
-    console.log(this.painOrDeadGame.getCarY());
-  }
-
   resetGame() {
     window.cancelAnimationFrame(this.requestAnimationFrameId);
     this.startGame();
@@ -100,7 +97,14 @@ export class GameComponent implements OnInit, OnDestroy {
     this.startGame();
   }
 
+  onPlayAgainAfterGameEnd() {
+    this.startGame();
+  }
+
   private startGame() {
+    this.gameStarted = true;
+    this.gameEnded = false;
+    this.showStartInfo = true;
     this.settings = new GameSettings();
     this.painOrDeadGame = new PainOrDeadGame(this.shapeDrawer, 3 * 60 * 1000, this.chosenCarType);
     this.painOrDeadGame.create();
@@ -109,6 +113,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private finishGame() {
     console.log('game ended');
+    this.score = this.painOrDeadGame.getScore();
+    window.cancelAnimationFrame(this.requestAnimationFrameId);
+    this.gameEnded = true;
   }
 
   private runGameLoop(ctx: CanvasRenderingContext2D): void {
@@ -149,6 +156,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.setCarAcceleration();
 
     this.camera.m_center.x = this.painOrDeadGame.getCarX();
+    // this.camera.m_center.x = this.painOrDeadGame.getCarX();
     this.camera.m_center.y = this.painOrDeadGame.getCarY() + 2;
 
     this.painOrDeadGame.step(timeStep, settings.velocityIterations, settings.positionIterations, settings.particleIterations);
@@ -194,6 +202,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+
   private timeToMinutesAndSecondsString(time: number): string {
     const minutesValue = Math.floor(time / (60 * 1000));
     time -= minutesValue * 60 * 1000;
@@ -202,6 +211,4 @@ export class GameComponent implements OnInit, OnDestroy {
     const seconds = secondsValue < 10 ? '0' + secondsValue : secondsValue;
     return `${minutes}:${seconds}`;
   }
-
-
 }
