@@ -1,76 +1,53 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from "@angular/core";
-import {Car} from "../../game/car";
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {Camera} from "../../game/camera";
 import {ShapeDrawer} from "../../game/shape.drawer";
 import {GameSettings} from "../../game/game.settings";
-import {INiceGuyFactory} from "../../game/niceguy/inice.guy.factory";
-import {NiceGuyFactory} from "../../game/niceguy/nice.guy.factory";
 import {PainOrDeadGame} from "../../game/pain.or.dead.game";
+import {GameStepInfo} from "../../game/game.step.info";
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
+  public score: number = 0;
+  public timeLeft: string;
+  public gameStarted = false;
+  public isPain: boolean = false;
+  public isDead: boolean = false;
+  public showStartInfo: boolean = true;
   @ViewChild('gameCanvas') canvasRef: ElementRef;
+  private ctx: CanvasRenderingContext2D;
+  private requestAnimationFrameId: number;
   private settings: GameSettings;
   private painOrDeadGame: PainOrDeadGame;
   private leftArrowPressed: boolean = false;
   private rightArrowPressed: boolean = false;
   private upArrowPressed: boolean = false;
   private downArrowPressed: boolean = false;
-
+  private chosenCarType: string;
+  private numOfFramesToShowGameInfo = 0;
   constructor(
     private camera: Camera,
     private shapeDrawer: ShapeDrawer
   ) {
-    this.settings = new GameSettings();
   }
 
 
   ngOnInit() {
-    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
-    this.shapeDrawer.ctx = ctx;
-    this.painOrDeadGame = new PainOrDeadGame(this.shapeDrawer);
-    this.painOrDeadGame.create();
-
-    window.requestAnimationFrame(time => this.simulateGame(time, ctx));
+    this.ctx = this.canvasRef.nativeElement.getContext('2d');
+    this.shapeDrawer.ctx = this.ctx;
   }
 
-  public simulationLoop(time: number, ctx: CanvasRenderingContext2D): void {
-
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.save();
-
-    ctx.translate(0.5 * ctx.canvas.width, 0.5 * ctx.canvas.height);
-    ctx.scale(1, -1);
-    const s: number = 0.5 * this.camera.m_height / this.camera.m_extent;
-    ctx.scale(s, s);
-    ctx.lineWidth /= s;
-
-    ctx.scale(1 / this.camera.m_zoom, 1 / this.camera.m_zoom);
-    ctx.lineWidth *= this.camera.m_zoom;
-    ctx.translate(-this.camera.m_center.x, -this.camera.m_center.y);
-
-    this.step(this.settings);
-    ctx.restore();
-  }
-
-  public step(settings: GameSettings): void {
-    let timeStep = settings.hz > 0 ? 1 / settings.hz : 0;
-
-    this.shapeDrawer.setDrawerFlags(this.settings);
-
-    this.setCarAcceleration();
-
-    this.camera.m_center.x = this.painOrDeadGame.getCarX();
-
-    // this.car.breakable.Step();
-    this.painOrDeadGame.step(timeStep, settings.velocityIterations, settings.positionIterations, settings.particleIterations);
-    this.painOrDeadGame.updateBodiesState();
-    this.painOrDeadGame.draw();
-
+  ngOnDestroy(): void {
+    this.isPain = false;
+    this.isDead = false;
+    this.gameStarted = false;
+    this.settings = null;
+    this.score = 0;
+    window.cancelAnimationFrame(this.requestAnimationFrameId);
+    this.painOrDeadGame = null;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -108,9 +85,78 @@ export class GameComponent implements OnInit {
     event.stopPropagation();
   }
 
-  private simulateGame(time: number, ctx: CanvasRenderingContext2D): void {
-    this.simulationLoop(time, ctx);
-    window.requestAnimationFrame(time => this.simulateGame(time, ctx));
+  onClickDiv() {
+    console.log(this.painOrDeadGame.getCarY());
+  }
+
+  resetGame() {
+    window.cancelAnimationFrame(this.requestAnimationFrameId);
+    this.startGame();
+  }
+
+  onCarChosen(carType: string) {
+    this.gameStarted = true;
+    this.chosenCarType = carType;
+    this.startGame();
+  }
+
+  private startGame() {
+    this.settings = new GameSettings();
+    this.painOrDeadGame = new PainOrDeadGame(this.shapeDrawer, 3 * 60 * 1000, this.chosenCarType);
+    this.painOrDeadGame.create();
+    this.runGameLoop(this.ctx);
+  }
+
+  private finishGame() {
+    console.log('game ended');
+  }
+
+  private runGameLoop(ctx: CanvasRenderingContext2D): void {
+    this.gameLoop(ctx);
+    this.requestAnimationFrameId = window.requestAnimationFrame(time => {
+      if (!this.painOrDeadGame.isGameFinished()) {
+        this.runGameLoop(ctx);
+      } else {
+        this.finishGame();
+      }
+    });
+  }
+
+  private gameLoop(ctx: CanvasRenderingContext2D): void {
+
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.save();
+
+    ctx.translate(0.5 * ctx.canvas.width, 0.5 * ctx.canvas.height);
+    ctx.scale(1, -1);
+    const s: number = 0.5 * this.camera.m_height / this.camera.m_extent;
+    ctx.scale(s, s);
+    ctx.lineWidth /= s;
+
+    ctx.scale(1 / this.camera.m_zoom, 1 / this.camera.m_zoom);
+    ctx.lineWidth *= this.camera.m_zoom;
+    ctx.translate(-this.camera.m_center.x, -this.camera.m_center.y);
+
+    this.step(this.settings);
+    ctx.restore();
+  }
+
+  private step(settings: GameSettings): void {
+    let timeStep = settings.hz > 0 ? 1 / settings.hz : 0;
+
+    this.shapeDrawer.setDrawerFlags(this.settings);
+
+    this.setCarAcceleration();
+
+    this.camera.m_center.x = this.painOrDeadGame.getCarX();
+    this.camera.m_center.y = this.painOrDeadGame.getCarY() + 2;
+
+    this.painOrDeadGame.step(timeStep, settings.velocityIterations, settings.positionIterations, settings.particleIterations);
+    this.painOrDeadGame.updateBodiesState();
+    this.painOrDeadGame.draw();
+    this.score = this.painOrDeadGame.getScore();
+    this.timeLeft = this.timeToMinutesAndSecondsString(this.painOrDeadGame.getTimeLeft());
+    this.setGameInfo(this.painOrDeadGame.getGameStepInfo());
   }
 
   private setCarAcceleration() {
@@ -126,7 +172,36 @@ export class GameComponent implements OnInit {
 
   }
 
-  onClickDiv() {
-    console.log(this.painOrDeadGame.getCarX());
+  private setGameInfo(gameStepInfo: GameStepInfo) {
+    this.numOfFramesToShowGameInfo++;
+    if (this.numOfFramesToShowGameInfo >= this.settings.animationFramesPerGameInfo) {
+      this.numOfFramesToShowGameInfo = 0;
+      this.showStartInfo = true;
+      this.isDead = false;
+      this.isPain = false;
+    }
+    if (gameStepInfo === null) {
+      return;
+    }
+
+    this.showStartInfo = false;
+    if (gameStepInfo.isDead) {
+      this.isDead = true;
+      this.isPain = false;
+    } else if (gameStepInfo.isPain) {
+      this.isPain = true;
+      this.isDead = false;
+    }
   }
+
+  private timeToMinutesAndSecondsString(time: number): string {
+    const minutesValue = Math.floor(time / (60 * 1000));
+    time -= minutesValue * 60 * 1000;
+    const secondsValue = Math.floor(time / 1000);
+    const minutes = minutesValue < 10 ? '0' + minutesValue : minutesValue;
+    const seconds = secondsValue < 10 ? '0' + secondsValue : secondsValue;
+    return `${minutes}:${seconds}`;
+  }
+
+
 }
