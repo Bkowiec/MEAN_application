@@ -8,6 +8,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 export class GameEndComponent implements OnInit {
   @Input('gameScore') gameScore: number = 0;
   @Output() private playAgain: EventEmitter<any> = new EventEmitter<any>();
+  @Output() private saveGameScore: EventEmitter<number> = new EventEmitter<number>();
   constructor() {
   }
 
@@ -20,6 +21,6 @@ export class GameEndComponent implements OnInit {
   }
 
   onSaveBestScoreButtonClicked() {
-
+    this.saveGameScore.emit(this.gameScore);
   }
 }

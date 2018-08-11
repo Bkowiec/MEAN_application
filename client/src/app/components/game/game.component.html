@@ -37,4 +37,4 @@
   <canvas #gameCanvas width="1024px" height="500px" style="background-color: black"></canvas>
 </div>
 <app-game-menu *ngIf="!gameStarted && !gameEnded" (carChosen)="onCarChosen($event)"></app-game-menu>
-<app-game-end *ngIf="gameStarted && gameEnded" (playAgain)="onPlayAgainAfterGameEnd()" [gameScore]="score"></app-game-end>
+<app-game-end *ngIf="gameStarted && gameEnded" (playAgain)="onPlayAgainAfterGameEnd()" (saveGameScore)="onSaveGameScore($event)" [gameScore]="score"></app-game-end>

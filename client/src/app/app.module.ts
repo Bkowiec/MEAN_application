@@ -28,6 +28,8 @@ import {Camera} from "./game/camera";
 import {ShapeDrawer} from "./game/shape.drawer";
 import {GameMenuComponent} from "./components/game/game-menu/game.menu.component";
 import {GameEndComponent} from "./components/game/game-end/game.end.component";
+import {GameScoreService} from "./services/game.score.service";
+import {GameScoreComponent} from "./components/game-score/game.score.component";
 
 
 @NgModule({
@@ -45,7 +47,8 @@ import {GameEndComponent} from "./components/game/game-end/game.end.component";
     PublicProfileComponent,
     GameComponent,
     GameMenuComponent,
-    GameEndComponent
+    GameEndComponent,
+    GameScoreComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,7 @@ import {GameEndComponent} from "./components/game/game-end/game.end.component";
     AppRoutingModule,
     FormsModule
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, Camera, ShapeDrawer],
+  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, Camera, ShapeDrawer, GameScoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

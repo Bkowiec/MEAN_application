@@ -4,6 +4,9 @@ import {ShapeDrawer} from "../../game/shape.drawer";
 import {GameSettings} from "../../game/game.settings";
 import {PainOrDeadGame} from "../../game/pain.or.dead.game";
 import {GameStepInfo} from "../../game/game.step.info";
+import {AuthService} from "../../services/auth.service";
+import {GameScoreService} from "../../services/game.score.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-game',
@@ -29,7 +32,11 @@ export class GameComponent implements OnInit, OnDestroy {
   private downArrowPressed: boolean = false;
   private chosenCarType: string;
   private numOfFramesToShowGameInfo = 0;
+  private username;
   constructor(
+    private authService: AuthService,
+    private gameScoreService: GameScoreService,
+    private router: Router,
     private camera: Camera,
     private shapeDrawer: ShapeDrawer
   ) {
@@ -39,6 +46,10 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
     this.shapeDrawer.ctx = this.ctx;
+
+    this.authService.getProfile().subscribe(profile => {
+      this.username = profile.user.username;
+    });
   }
 
   ngOnDestroy(): void {
@@ -99,6 +110,19 @@ export class GameComponent implements OnInit, OnDestroy {
 
   onPlayAgainAfterGameEnd() {
     this.startGame();
+  }
+
+  onSaveGameScore(gameScore: number) {
+    const gameScoreToSave = {
+      carType: this.chosenCarType,
+      score: gameScore,
+      createdBy: this.username
+    };
+    this.gameScoreService.save(gameScoreToSave)
+      .subscribe(result => {
+        console.log(result);
+        this.router.navigate(['/game-score']);
+      });
   }
 
   private startGame() {
@@ -180,6 +204,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   }
 
+
   private setGameInfo(gameStepInfo: GameStepInfo) {
     this.numOfFramesToShowGameInfo++;
     if (this.numOfFramesToShowGameInfo >= this.settings.animationFramesPerGameInfo) {
@@ -201,7 +226,6 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isDead = false;
     }
   }
-
 
   private timeToMinutesAndSecondsString(time: number): string {
     const minutesValue = Math.floor(time / (60 * 1000));

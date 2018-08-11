@@ -12,6 +12,7 @@ import { EditBlogComponent } from './components/blog/edit-blog/edit-blog.compone
 import { DeleteBlogComponent } from './components/blog/delete-blog/delete-blog.component';
 import { PublicProfileComponent } from './components/public-profile/public-profile.component';
 import {GameComponent} from "./components/game/game.component";
+import {GameScoreComponent} from "./components/game-score/game.score.component";
 
 const appRoutes: Routes = [
     {
@@ -50,7 +51,13 @@ const appRoutes: Routes = [
     },
     {
       path: 'game',
-      component: GameComponent
+      component: GameComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'game-score',
+      component: GameScoreComponent,
+      canActivate: [AuthGuard]
     },
     {
         path: 'delete-blog/:id',
