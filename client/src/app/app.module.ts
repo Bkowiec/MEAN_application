@@ -23,6 +23,13 @@ import { BlogComponent } from './components/blog/blog.component';
 import { EditBlogComponent } from './components/blog/edit-blog/edit-blog.component';
 import { DeleteBlogComponent } from './components/blog/delete-blog/delete-blog.component';
 import { PublicProfileComponent } from './components/public-profile/public-profile.component';
+import {GameComponent} from "./components/game/game.component";
+import {Camera} from "./game/camera";
+import {ShapeDrawer} from "./game/shape.drawer";
+import {GameMenuComponent} from "./components/game/game-menu/game.menu.component";
+import {GameEndComponent} from "./components/game/game-end/game.end.component";
+import {GameScoreService} from "./services/game.score.service";
+import {GameScoreComponent} from "./components/game-score/game.score.component";
 
 
 @NgModule({
@@ -37,7 +44,11 @@ import { PublicProfileComponent } from './components/public-profile/public-profi
     BlogComponent,
     EditBlogComponent,
     DeleteBlogComponent,
-    PublicProfileComponent
+    PublicProfileComponent,
+    GameComponent,
+    GameMenuComponent,
+    GameEndComponent,
+    GameScoreComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +57,7 @@ import { PublicProfileComponent } from './components/public-profile/public-profi
     AppRoutingModule,
     FormsModule
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService],
+  providers: [AuthService, AuthGuard, NotAuthGuard, BlogService, Camera, ShapeDrawer, GameScoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
