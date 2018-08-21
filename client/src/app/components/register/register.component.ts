@@ -40,189 +40,64 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {
-    this.createForm();
-  }
-
-  createForm() {
-    this.form = this.formBuilder.group({
-      email: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(30),
-        this.validateEmail
-      ])],
-      username: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(15),
-        this.validateUsername
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(35),
-        this.validatePassword
-      ])],
-      confirm: ['', Validators.required]
-    }, {
-      validator: this.matchingPasswords('password', 'confirm')
-    })
-  }
-
-  disableForm() {
-    this.form.controls['email'].disable();
-    this.form.controls['username'].disable();
-    this.form.controls['password'].disable();
-    this.form.controls['confirm'].disable();
-  }
-
-  enableForm() {
-    this.form.controls['email'].enable();
-    this.form.controls['username'].enable();
-    this.form.controls['password'].enable();
-    this.form.controls['confirm'].enable();
-  }
-
-  validateEmail(controls) {
-    const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-    if (regExp.test(controls.value)) {
-      return null;
-    } else {
-      return {
-        'validateEmail': true
-      }
-    }
-  }
-
-  validateUsername(controls) {
-    const regExp = new RegExp(/^[a-zA-Z0-9]+$/);
-    if (regExp.test(controls.value)) {
-      return null;
-    } else {
-      return {
-        'validateUsername': true
-      }
-    }
-  }
-
-  validatePassword(controls) {
-    const regExp = new RegExp(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}/);
-    if (regExp.test(controls.value)) {
-      return null;
-    } else {
-      return {
-        'validatePassword': true
-      }
-    }
-  }
-
-  matchingPasswords(password, confirm) {
-    return (group: FormGroup) => {
-      if (group.controls[password].value === group.controls[confirm].value) {
-        return null;
-      } else {
-        return {
-          'matchingPasswords': true
-        }
-      }
-    }
-  }
-
-  onRegisterSubmit() {
-    this.processing = true;
-    this.disableForm();
-    const user = {
-      email: this.form.get('email').value,
-      username: this.form.get('username').value,
-      password: this.form.get('password').value
-    }
-    this.authService.registerUser(user).subscribe(data => {
-      if (!data.success) {
-        this.messageClass = 'alert alert-danger';
-        this.message = data.message;
-        this.processing = false;
-        this.enableForm();
-      } else {
-        this.messageClass = 'alert alert-success';
-        this.message = data.message
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000)
-      }
-    });
-  }
-
-
-
-
-
+  ) {}
 
 
 
   postIt() {
-    var counter1 = 0;
-    var counter2 = 0;
-    const user = [];
+
+    var shops = []
+
+var events = [];
+
+    events.forEach(function(item){
+      shops.forEach(function(item2){
+        if(item2.email.match(item.params.shopId)){	
+          item.client.uuid = item2.uuid;		
+        }
+      })
+    })
+
+// console.log(JSON.stringify(events));
+document.querySelector('.areatext').value = JSON.stringify(events)
+
+    const user = events;
+    
 this.toimport = user.length;
     for (var i = 0; i < user.length; i++) {
       const client = [];
-      client.push(user[i]);
-      this.authService.postIt(client).subscribe(
+      client.push(user[i]); 
+      this.authService.postIt(client[0]).subscribe(
         data => {
         if (!data.ok == true) {
-          console.log(client[0].email + ' niezaimportowany!');
+          // console.log(client[0]);
+          // console.log('niezaimportowany!');
           return;
         } else {
-          console.log(client[0].email + ' zaimportowany');
+          // console.log(client[0]);
+          // console.log('zaimportowany');
           var item = document.createElement("li");
-          item.innerText = client[0].email;
+          item.innerText = JSON.stringify(client[0]);
           document.querySelector('.successItem').appendChild(item);
+          var objDiv = document.querySelector('.successItem');
+          objDiv.scrollTop = objDiv.scrollHeight;
           this.importplus += 1;
-          this.importprocent = ((this.importplus / this.toimport) * 100).toFixed(2);
-          document.querySelector('.skill-1').value = this.importprocent;
+          this.importprocent = Number(((this.importplus / this.toimport) * 100).toFixed(2));
         }
       },
         error => {
-          console.log(client[0].email);
+          // console.log(client[0]);
           var item = document.createElement("li");
-          item.innerText = client[0].email;
+          item.innerText = JSON.stringify(client[0]);
           document.querySelector('.errorItem').appendChild(item);
+          var objDiv2 = document.querySelector('.errorItem');
+          objDiv2.scrollTop = objDiv2.scrollHeight;
         },
         () => {
         
         }
       );
     }
-  }
-
-
-
-
-
-
-  checkEmail() {
-    this.authService.checkEmail(this.form.get('email').value).subscribe(data => {
-      if (!data.success) {
-        this.emailValid = false;
-        this.emailMessage = data.message;
-      } else {
-        this.emailValid = true;
-        this.emailMessage = data.message;
-      }
-    });
-  }
-
-  checkUsername() {
-    this.authService.checkUsername(this.form.get('username').value).subscribe(data => {
-      if (!data.success) {
-        this.usernameValid = false;
-        this.usernameMessage = data.message;
-      } else {
-        this.usernameValid = true;
-        this.usernameMessage = data.message;
-      }
-    });
   }
 
   ngOnInit() {}

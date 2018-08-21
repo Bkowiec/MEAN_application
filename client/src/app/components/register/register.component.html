@@ -5,19 +5,31 @@
     <span style="color:#ff6b6b">{{importprocent}}</span>
     <span style="color:#ff6b6b">%</span>
   </h1>
-  <progress class="skill-1" max="100" value=""></progress><br><br>
-  <button (click)="postIt()">PRZEPIERDALAJ!</button>
+  <progress class="skill-1" max="100" value={{importprocent}}></progress>
+  <br>
+  <br>
+  <button (click)="postIt()">Send</button>
   <div>
-    <div style="width: 50%;
-    float: left;">
+    <div style="    width: 100%;
+      float: right;font-size: 10px">
+      <h2>Dane:</h2>
+      <div style="    max-height: 300px;
+      overflow-y: scroll;
+      background: whitesmoke;color:green;list-style: none;">
+        <textarea style="width: 100%" class="areatext"></textarea>
+      </div>
+    </div>
+
+    <div style="width: 100%;
+    float: left;font-size: 10px">
       <h2>Niezaimportowani:</h2>
       <ul style="    max-height: 300px;
     overflow-y: scroll;
     background: whitesmoke;color:red;list-style: none;" class="errorItem"></ul>
     </div>
 
-    <div style="    width: 50%;
-    float: right;">
+    <div style="    width: 100%;
+    float: right;font-size: 10px">
       <h2>Zaimportowani:</h2>
       <ul style="    max-height: 300px;
     overflow-y: scroll;

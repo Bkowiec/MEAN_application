@@ -32,7 +32,7 @@ export class AuthService {
       headers: new Headers({
         'Accept': 'application/json',
         'Content-Type':'application/json',
-        'authorization': 'Bearer: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiIzNjM2NjM4ODE3NzcyZTQyYjU5ZDc0Y2ZmNTcxZmJiMyIsImF1ZCI6IkFQSSIsInJsbSI6ImJ1c2luZXNzX3Byb2ZpbGUiLCJjdGQiOjE1MzE5MDA0MDc5MDYsImlzcyI6IlN5bmVyaXNlIiwiYnBpIjoxNjksImV4cCI6MTUzMTkwNDAwNywiYXBrIjoiNThEN0NBMEItOUE4Ri02REI2LTlCQ0MtMzkwRjU2RjE1QjQ4In0.YEZRrXel9kJ7ob-Mzfo0xo_9ZMWmsjJ1YUXW0kdG4CShTkWH6y9kEqI33FcdBEmn4qhh_HN6NwzAjIMLT3w2BxEPhIl_VVB_7zZCSUVyoudxiW5qDwR1-R86LcNhg2v4wUOpeoTvxacZQTlgOnkaG3lkuHO74Ty6ArVeHBALzjcdYle-1-Q8fGPOCG62ZxXn4bcCxXcbM-bzGcBuTAc3qo9ADTyB2_UMVwUbyXTkc_KL6KB5EEyBh4a6YgAw58r13RkgWDDvEajs6YPGQ7f7v7e9AqXHZEV-IFaKN5nZURAjdnOpIZfCqk_DYK63ERc3u_1ZR2NEKDTPJUSGIXlAgNgZfetSgVCEzmr6uurGhXDaDzE-P5t24ZvqZegsUdQzU6naq99kG7N6kNAkRZDMLaAsukCxpE1ZnKhr0xjZvYQZC6-5GyOwe2SA-R0Vg65-KN6_T6O_HCdJyAUvMx1GDSdwYWm-ep41mtwA7Hn1zW8RYbOqSGMc8mnm0DYOzuC90d51Y8orDsFcEDLMizN6NV5fxb_6b-EeJ927kUINAThCZZGE3pv8sTBHABVvk46F3OKH3LKGZI81PbWhO5CseK4WA2Cs2A5GCJTuvR6voPGxGXWpzvHk0fKsWf9rY13si6UArp-UOXyR854TkvgVEnMMWlBshXLmhhS4gYBty3Y',
+        'authorization': 'Bearer: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJjOGZmZTlhNTg3YjEyNmYxNTJlZDNkODlhMTQ2YjQ0NSIsImF1ZCI6IkFQSSIsInJsbSI6ImJ1c2luZXNzX3Byb2ZpbGUiLCJjdGQiOjE1MzQ3OTc2NjI2OTgsImlzcyI6IlN5bmVyaXNlIiwiYnBpIjoxMjQsImV4cCI6MTUzNDgwMTI2MiwiYXBrIjoiOUFGRkFFNDYtRkQyNS01NDc4LTA5ODAtNzU0NzRDRURDQjFDIn0.FVY-0ngbLqVhxyGkQfbRBURpT9dlvEE7hWF7V2CAsEmmupIbA8n9wNVwHX5EPwzPaZxNnHbuW18_0u61xQSzfEyCy2UQp5eBArzrMv-641mn8T4WePDosFjxROdHDlSKp5574bOQghuSsMax-ZLbRkJBpIiPA6cgKdPkCToy6_zizLqGMPsCIq-b6s1Ihsvi5Vs_fhioATCYqgiV2SOoZ9m_v0IMhs4x9u1_JCP5vnW__pT8a-8sq8qMSJWMmW5MuMKLAl3BufJevE4zYqdHlIFuTt_zd69HLGPqPSv4EBY6fBeXfLJtTyKDCpIZfWqxq9SG_4u1-uiGbCIBtqa9F1-W7binmq8pz8-n8CiGFmeNTBvfx75EUACdWn7GVX0T2fJN7Mfq8W_qIEMj-5VTAkFrkbmTYLkURQcKXRxcn-Dz3vxYm7g8lYuYM-8ZC5bmIbGosmGNa6WexG-fwkOssz1OeX0Gg9X3QCMC5MyBMwhzyFECT_17_6Np5Nee4tr9paj30U1Ak6B86T3Bauov5l4V7OugEkbh2CtCGIsdSPACEKrdPgG71n1LP2fJ1bNd-XLenD2X3CsEn4cQVZjhqPuLbBWkaZyj4a3P94FvdUkQFuKI9tFGe2-Wpt88hTwCxlCIv6Ukv-1zgMHo8qIP2vwFH_GyFWU1TvSq7AbTwOk',
         'Api-Version': '4.0'
       })
     });
@@ -40,7 +40,7 @@ export class AuthService {
 
   postIt(clients){
     this.postClients();
-    return this.http.post('https://api.synerise.com/v4/clients/batch', clients, this.options);
+    return this.http.post('https://api.synerise.com/v4/events/custom', clients, this.options);
   }
 
 
