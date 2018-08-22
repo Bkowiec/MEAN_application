@@ -13,11 +13,11 @@ const cors = require('cors');
 
 
 const io = require('socket.io')(server);
-const ClientManager = require('./ClientManager');
-const ChatroomManager = require('./ChatroomManager');
+const ClientManager = require('./routes/ClientManager');
+const ChatroomManager = require('./routes/chatroomManager');
 const clientManager = ClientManager();
 const chatroomManager = ChatroomManager();
-const makeHandlers = require('./handlers');
+const makeHandlers = require('./routes/handlers');
 
 
 mongoose.Promise = global.Promise;
@@ -48,6 +48,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/client/dist/index.html'));
 });
 
+//Connection to server via io
 io.on('connection', function (client) {
     const {
         handleRegister,
@@ -55,17 +56,15 @@ io.on('connection', function (client) {
         handleLeave,
         handleMessage,
         handleGetChatrooms,
-        handleGetAvailableUsers,
         handleDisconnect
     } = makeHandlers(client, clientManager, chatroomManager);
-    // console.log('client connected...', client.id)
+    console.log('client connected...', client.id)
     clientManager.addClient(client);
     client.on('register', handleRegister);
     client.on('join', handleJoin);
     client.on('leave', handleLeave);
     client.on('message', handleMessage);
     client.on('chatrooms', handleGetChatrooms);
-    client.on('availableUsers', handleGetAvailableUsers);
     client.on('disconnect', function () {
         console.log('client disconnect...', client.id);
         handleDisconnect()
